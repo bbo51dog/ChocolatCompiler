@@ -1,2 +1,2 @@
 # ChocolatCompiler
-My original language comi
+My original language compiler
