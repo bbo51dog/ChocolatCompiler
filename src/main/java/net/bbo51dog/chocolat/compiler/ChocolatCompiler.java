@@ -1,6 +1,7 @@
 package net.bbo51dog.chocolat.compiler;
 
 import net.bbo51dog.chocolat.compiler.parser.Parser;
+import net.bbo51dog.chocolat.compiler.parser.node.Node;
 import net.bbo51dog.chocolat.compiler.tokenizer.Token;
 import net.bbo51dog.chocolat.compiler.tokenizer.Tokenizer;
 
@@ -17,6 +18,8 @@ public class ChocolatCompiler {
         Tokenizer tokenizer = new Tokenizer(input);
         try {
             List<Token> tokenList = tokenizer.tokenize();
+            Parser parser = new Parser(tokenList);
+            Node node = parser.parse();
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);

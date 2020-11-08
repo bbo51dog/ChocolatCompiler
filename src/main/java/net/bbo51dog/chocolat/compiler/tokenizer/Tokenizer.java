@@ -1,5 +1,7 @@
 package net.bbo51dog.chocolat.compiler.tokenizer;
 
+import net.bbo51dog.chocolat.compiler.Type;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class Tokenizer {
             tokenList.add(token);
             token = nextToken();
         }
+        tokenList.add(new Token(Type.EOF, ""));
         return tokenList;
     }
 
@@ -58,8 +61,31 @@ public class Tokenizer {
         return Character.isAlphabetic(c);
     }
 
+    private boolean isSeparator(char c) {
+        return c == '(' || c == ')';
+    }
+
     private Token sign() throws Exception {
-        return new Token(TokenType.SIGN, Character.toString(nextChar()));
+        char c = nextChar();
+        Type type = null;
+        switch (c) {
+            case '+':
+                type = Type.ADD;
+                break;
+
+            case '-':
+                type = Type.SUB;
+                break;
+
+            case '*':
+                type = Type.MUL;
+                break;
+
+            case '/':
+                type = Type.DIV;
+                break;
+        }
+        return new Token(type, Character.toString(c));
     }
 
     private Token number() throws Exception {
@@ -68,7 +94,7 @@ public class Tokenizer {
         while (!isEOF() && Character.isDigit(currentChar())) {
             b.append(nextChar());
         }
-        return new Token(TokenType.NUM, b.toString());
+        return new Token(Type.NUM, b.toString());
     }
 
     private Token variable() throws Exception {
@@ -77,19 +103,38 @@ public class Tokenizer {
         while (!isEOF() && (Character.isAlphabetic(currentChar()) || Character.isDigit(currentChar()))) {
             b.append(nextChar());
         }
-        return new Token(TokenType.VARIABLE, b.toString());
+        return new Token(Type.VARIABLE, b.toString());
+    }
+
+    private Token separator() throws Exception {
+        Type type = null;
+        char c = nextChar();
+        switch (c) {
+            case '(':
+                type = Type.LPAREN;
+                break;
+
+            case ')':
+                type = Type.RPAREN;
+                break;
+        }
+        return new Token(type, String.valueOf(c));
     }
 
     private Token nextToken() throws Exception {
         skipSpace();
         if (isEOF()) {
             return null;
-        } else if (isSignStart(currentChar())) {
+        }
+        char c = currentChar();
+        if (isSignStart(c)) {
             return sign();
-        } else if (isNumberStart(currentChar())) {
+        } else if (isNumberStart(c)) {
             return number();
-        } else if (isVariableStart(currentChar())) {
+        } else if (isVariableStart(c)) {
             return variable();
+        } else if (isSeparator(c)) {
+            return separator();
         } else {
             throw new Exception("Not a character for tokens");
         }
