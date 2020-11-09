@@ -42,35 +42,26 @@ public class Parser {
 
     private Node expr() throws Exception {
         Node node = mul();
-
-        for (;;) {
-            if (consume(Type.ADD)) {
-                node = new NonTerminalNode(Type.ADD, currentToken().getValue(), node, mul());
-            } else if (consume(Type.SUB)) {
-                node = new NonTerminalNode(Type.SUB, currentToken().getValue(), node, mul());
-            } else {
-                return node;
-            }
+        if (consume(Type.ADD)) {
+            node = new NonTerminalNode(Type.ADD, currentToken().getValue(), node, mul());
+        } else if (consume(Type.SUB)) {
+            node = new NonTerminalNode(Type.SUB, currentToken().getValue(), node, mul());
         }
+        return node;
     }
 
     private Node mul() throws Exception {
         Node node = unary();
-
-        for (;;) {
-            if (consume(Type.MUL)) {
-                node = new NonTerminalNode(Type.MUL, currentToken().getValue(), node, unary());
-            } else if (consume(Type.DIV)) {
-                node = new NonTerminalNode(Type.DIV, currentToken().getValue(), node, unary());
-            } else {
-                return node;
-            }
+        if (consume(Type.MUL)) {
+            node = new NonTerminalNode(Type.MUL, currentToken().getValue(), node, unary());
+        } else if (consume(Type.DIV)) {
+            node = new NonTerminalNode(Type.DIV, currentToken().getValue(), node, unary());
         }
+        return node;
     }
 
     private Node unary() throws Exception {
         Node node;
-
         if (consume(Type.ADD)) {
             node = primary();
         } else if (consume(Type.SUB)) {
