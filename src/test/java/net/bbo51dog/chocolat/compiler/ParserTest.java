@@ -4,8 +4,6 @@ import static org.junit.Assert.*;
 
 import net.bbo51dog.chocolat.compiler.parser.Parser;
 import net.bbo51dog.chocolat.compiler.parser.node.Node;
-import net.bbo51dog.chocolat.compiler.parser.node.NonTerminalNode;
-import net.bbo51dog.chocolat.compiler.parser.node.NumNode;
 import net.bbo51dog.chocolat.compiler.tokenizer.Token;
 import org.junit.Test;
 
