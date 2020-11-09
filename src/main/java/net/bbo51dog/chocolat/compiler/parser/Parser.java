@@ -55,17 +55,30 @@ public class Parser {
     }
 
     private Node mul() throws Exception {
-        Node node = primary();
+        Node node = unary();
 
         for (;;) {
             if (consume(Type.MUL)) {
-                node = new NonTerminalNode(Type.MUL, currentToken().getValue(), node, primary());
+                node = new NonTerminalNode(Type.MUL, currentToken().getValue(), node, unary());
             } else if (consume(Type.DIV)) {
-                node = new NonTerminalNode(Type.DIV, currentToken().getValue(), node, primary());
+                node = new NonTerminalNode(Type.DIV, currentToken().getValue(), node, unary());
             } else {
                 return node;
             }
         }
+    }
+
+    private Node unary() throws Exception {
+        Node node;
+
+        if (consume(Type.ADD)) {
+            node = primary();
+        } else if (consume(Type.SUB)) {
+            node = new NonTerminalNode(Type.SUB, "-", new NumNode("0"), primary());
+        } else {
+            node = primary();
+        }
+        return node;
     }
 
     private Node primary() throws Exception {
